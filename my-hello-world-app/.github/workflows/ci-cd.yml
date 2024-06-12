@@ -1,4 +1,3 @@
-
 name: CI/CD Pipeline
 
 on:
@@ -21,11 +20,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: app/
+        working-directory: ./my-hello-world-app
 
       - name: Run tests
         run: npm test
-        working-directory: app/
+        working-directory: ./my-hello-world-app
 
       - name: Log in to Amazon ECR
         id: login-ecr
@@ -37,11 +36,11 @@ jobs:
 
       - name: Build, tag, and push Docker image
         env:
-          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{secrets.AWS_REGION }}.amazonaws.com
           ECR_REPOSITORY: hello-world
           IMAGE_TAG: latest
         run: |
-          docker build -t hello-world:latest app/
+          docker build -t hello-world:latest ./my-hello-world-app
           docker tag hello-world:latest $ECR_REGISTRY/hello-world:$IMAGE_TAG
           docker push $ECR_REGISTRY/hello-world:$IMAGE_TAG
 
@@ -51,5 +50,3 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-         
-
